@@ -13152,6 +13152,10 @@ test_{network} = bottleneck_features['test']</code></pre>
 <p><strong>Answer:</strong></p>
 <p>I have tried all four CNN model for this problem, VGG has 68.9% accuracy, Resnet50 has 80.5%, InceptionV3 has 80.38 and Xception has 84.8% accuracy. So I choose Xception as base model.
 I started with a Sequential model, Added a GlobalAveragePooling to reduce parameters and a Dense layer with 133 outputs with softmax activation for predicting 133 dog breads.</p>
+<p>VGG is sometimes inefficient due to large width of convolutional layers, most of the activations in a deep VGG16 network are either unnecessary(value of zero) or redundant because of correlations between them. Inception on the other hand approximates a sparse CNN with a normal dense construction. The width/number of the convolutional filters of a particular kernel size is kept small. Xception is Extreme Inception, hence it is more efficient.</p>
+<p>Reference 
+<a href="https://cv-tricks.com/cnn/understand-resnet-alexnet-vgg-inception/">https://cv-tricks.com/cnn/understand-resnet-alexnet-vgg-inception/</a>
+<a href="https://towardsdatascience.com/an-intuitive-guide-to-deep-network-architectures-65fdc477db41">https://towardsdatascience.com/an-intuitive-guide-to-deep-network-architectures-65fdc477db41</a></p>
 
 </div>
 </div>
