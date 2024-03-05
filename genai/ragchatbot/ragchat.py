@@ -77,11 +77,11 @@ messages = [
 
 import utils
 data = utils.loadDataSet("jamescalam/llama-2-arxiv-papers-chunked")
-# index = utils.create_index("llama-2-rag")
-# print ('index created')
+index = utils.create_index("llama-2-rag")
+print ('index created')
 # utils.embed_write_data(utils.loadDataSet("jamescalam/llama-2-arxiv-papers-chunked") , index)
 # vectorstore = utils.get_vector_store(index)
-
+print (data)
 query = "What is so special about Llama 2?"
 
 # print(vectorstore.similarity_search(query, k=3))

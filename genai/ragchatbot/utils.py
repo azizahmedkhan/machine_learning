@@ -35,10 +35,21 @@ text_field = "text"
 embed_model = OpenAIEmbeddings(model="text-embedding-ada-002")
 
 
-def embed_write_data(data, index: Index):
-    from tqdm import tqdm
+def embed_write_text(data, index: Index):
+    print("saving text in idex")
+    embeds = embed_model.embed_documents([data])
+    print("embeds", embeds)
+    index.upsert(vectors=zip("encodedText",embeds))
 
+
+from tqdm import tqdm
+
+
+def embed_write_data(data, index: Index):
+    print("data", data, index)
     data = data.to_pandas()
+
+    print("Panda data", data)
 
     batch_size = 100
 
@@ -47,6 +58,7 @@ def embed_write_data(data, index: Index):
         batch = data.iloc[i:i_end]
         ids = [f"{x['doi']}-{x['chunk-id']}" for _, x in batch.iterrows()]
         texts = [x["chunk"] for _, x in batch.iterrows()]
+        print(texts)
         embeds = embed_model.embed_documents(texts)
         metadata = [
             {text_field: x["chunk"],
@@ -55,7 +67,7 @@ def embed_write_data(data, index: Index):
         ]
         # [(id1, embed1, metadata1), (id2, embed2, metadata2), ...]
 
-        index.upsert(vectors=zip(ids, embeds, metadata))
+        # index.upsert(vectors=zip(ids, embeds, metadata))
 
 
 def get_vector_store(index: Index) -> Pinecone:
@@ -68,6 +80,7 @@ def get_vector_store(index: Index) -> Pinecone:
     return Pinecone(
         index, embed_model, text_field
     )
+
 
 def augment_prompt(query: str):
     vectorstore = get_vector_store(create_index("llama-2-rag"))
