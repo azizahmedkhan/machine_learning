@@ -39,7 +39,7 @@ def embed_write_text(data, index: Index):
     print("saving text in idex")
     embeds = embed_model.embed_documents([data])
     print("embeds", embeds)
-    index.upsert(vectors=zip("encodedText",embeds))
+    index.upsert(vectors=zip("encodedText", embeds))
 
 
 from tqdm import tqdm
@@ -94,3 +94,60 @@ Contexts:
 
 Query: {query}"""
     return augmented_prompt
+
+
+def save_text_to_vector(text_content, index):
+    from pinecone_text.sparse import BM25Encoder
+
+    # Initialize BM25Encoder
+    bm25 = BM25Encoder()
+    bm25.fit([text_content])  # Fit the encoder with your text content
+
+    # Encode the document
+    doc_sparse_vector = bm25.encode_documents(text_content)
+
+    # Upsert the encoded vector into your Pinecone index
+    index.upsert(index_name="my-text-index", ids=["unique_document_id"], vectors=[doc_sparse_vector])
+
+import textract
+
+def convert_to_text(filename):
+  """
+  Converts a file to text format.
+
+  Args:
+      filename (str): The path to the file.
+
+  Returns:
+      str: The extracted text content of the file, or None if an error occurs.
+  """
+  try:
+    # Attempt using textract for broader compatibility
+    text = textract.process(filename)
+    return text.decode("utf-8")  # Decode bytes to string
+
+  except Exception as e:
+    print(f"Error converting file: {filename} - {e}")
+    # if filename.endswith(".docx"):
+    #     convert_word_to_text()
+    return None
+
+  # Fallback for specific formats if textract fails (optional)
+  # Add specific logic for handling docx, rtf, etc. using dedicated libraries
+  # if required for your use case.
+
+  # Example (using python-docx for docx files):
+
+# from docx import Document
+#
+# def convert_word_to_text():
+#     try:
+#       doc = Document(filename)
+#       full_text = []
+#       for paragraph in doc.paragraphs:
+#         full_text.append(paragraph.text)
+#       return "\n".join(full_text)
+#     except Exception as e:
+#       print(f"Error converting docx file: {filename} - {e}")
+#       return None
+
