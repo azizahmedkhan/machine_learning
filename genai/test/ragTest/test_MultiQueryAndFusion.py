@@ -1,5 +1,5 @@
 import pytest
-from rag.ragFromScratch import LLMInterface, VectorDb
+from rag.ragFromScratch import MultiQueryAndFusion, VectorDb
 
 
 class TestDataRelated():
