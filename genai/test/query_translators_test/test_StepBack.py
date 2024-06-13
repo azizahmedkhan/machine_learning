@@ -1,4 +1,4 @@
-from rag.ragFromScratch import VectorDb, StepBack
+from rag.query_translators import VectorDb, StepBack
 
 
 def test_generate_sub_question():

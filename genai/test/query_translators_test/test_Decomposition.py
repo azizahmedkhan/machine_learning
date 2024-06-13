@@ -1,4 +1,4 @@
-from rag.ragFromScratch import Decomposition, VectorDb
+from rag.query_translators import Decomposition, VectorDb
 
 def test_generate_sub_question():
     question = "What are the main components of an LLM-powered autonomous agent system?"

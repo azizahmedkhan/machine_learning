@@ -3,7 +3,8 @@ from langchain_core.prompts import ChatPromptTemplate, FewShotChatMessagePromptT
 from langchain_core.runnables import RunnableLambda
 from langchain_core.vectorstores import VectorStoreRetriever
 
-from rag.ragFromScratch import Constants
+from rag.query_translators import Constants
+
 
 def generate_step_back_queries_from_llm(retriever: VectorStoreRetriever, question: str):
     examples = [
@@ -56,6 +57,21 @@ def step_back_answer_from_llm(retriever: VectorStoreRetriever, question: str, st
     # Answer:"""
     response_prompt = ChatPromptTemplate.from_template(response_prompt_template)
 
+    # chain = (
+    #         {
+    #             # Retrieve context using the normal question
+    #             "normal_context": RunnableLambda(lambda x: x["question"]) | retriever,
+    #             # Retrieve context using the step-back question
+    #             # "step_back_context": step_back_queries | retriever,
+    #             "step_back_context": lambda x: x["step_back_query"],
+    #             # Pass on the question
+    #             "question": lambda x: x["question"],
+    #         }
+    #         | response_prompt
+    #         | Constants.LLM
+    #         | StrOutputParser()
+    # )
+
     chain = (
             {
                 # Retrieve context using the normal question
@@ -66,10 +82,8 @@ def step_back_answer_from_llm(retriever: VectorStoreRetriever, question: str, st
                 # Pass on the question
                 "question": lambda x: x["question"],
             }
-            | response_prompt
-            | Constants.LLM
-            | StrOutputParser()
+            | Constants.final_rag_chain(response_prompt)
     )
 
-    answer = chain.invoke({"question": question,"step_back_query":step_back_query})
+    answer = chain.invoke({"question": question, "step_back_query": step_back_query})
     return answer

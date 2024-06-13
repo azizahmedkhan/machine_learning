@@ -4,7 +4,7 @@ from langchain_core.output_parsers import StrOutputParser
 from operator import itemgetter
 from langchain_core.output_parsers import StrOutputParser
 
-from rag.ragFromScratch import Constants
+from rag.query_translators import Constants
 
 
 def generate_sub_question(question: str):
@@ -111,11 +111,7 @@ def decomposition_answer_from_llm(question, questions, answers):
 
     decomposition_prompt = ChatPromptTemplate.from_template(decomposition_template)
 
-    final_rag_chain = (
-            decomposition_prompt
-            | Constants.LLM
-            | StrOutputParser()
-    )
-
-    final_amswer = final_rag_chain.invoke({"context": context, "question": question})
-    return final_amswer
+    # final_amswer = final_rag_chain.invoke({"context": context, "question": question})
+    # final_answer = Constants.final_rag_chain(decomposition_prompt).invoke({"context": context, "question": question})
+    # return final_answer
+    return Constants.invoke_chain(decomposition_prompt, {"context": context, "question": question})
