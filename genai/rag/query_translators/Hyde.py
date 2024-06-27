@@ -6,7 +6,7 @@ from langchain_openai import ChatOpenAI
 from rag.query_translators import Constants
 
 
-#Hypothetical Document Embeddings
+# Hypothetical Document Embeddings
 
 def hyde(retriever: VectorStoreRetriever, question: str):
     # HyDE document genration
@@ -39,7 +39,4 @@ def hyde(retriever: VectorStoreRetriever, question: str):
 
     prompt = ChatPromptTemplate.from_template(template)
 
-
     return Constants.invoke_chain(prompt, {"context": retireved_docs, "question": question})
-
-    # return final_rag_chain.invoke({"context": retireved_docs, "question": question})
